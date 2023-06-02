@@ -1,29 +1,48 @@
-import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src="Octocat.png" className="App-logo" alt="logo" />
-        <p>
-          GitHub Codespaces <span className="heart">♥️</span> React
-        </p>
-        <p className="small">
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </p>
-      </header>
-    </div>
-  );
+import React from "react";
+import './App.css';
+import { Bars } from 'react-loading-icons'
+
+class App extends React.Component{
+  constructor(props){
+    super(props);
+    this.state={
+      nasaList: [],
+      isLoading : false
+
+    }
+  }
+  componentDidMount(){
+    var requestOptions = {
+      method: 'GET',
+      redirect: 'follow'
+    };
+    
+    fetch("https://api.nasa.gov/planetary/apod/?count=20&api_key=AxM4OjN6eHDSGyeYaze1e5PPwu7fzqT692Yme4FN", requestOptions)
+      .then(response => response.json())
+      .then(result => {
+        this.setState({
+          isLoading:true,
+          nasaList:result
+        })
+      })
+      .catch(error => console.log('error', error));
+
+  }
+  render(){
+    const {isLoading, nasaList} = this.state;
+    if(isLoading)
+    return(
+      <Bars />
+    )
+    return(
+      <div>
+        {nasaList.map((nasaL) => (
+          <h1>{nasaL.date}</h1>
+        ))}
+      </div>
+    )
+  }
 }
 
 export default App;
