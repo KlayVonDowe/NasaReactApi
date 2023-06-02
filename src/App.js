@@ -1,47 +1,52 @@
-
+import { Bars } from 'react-loading-icons'
 import React from "react";
 import './App.css';
-import { Bars } from 'react-loading-icons'
+
+
 
 class App extends React.Component{
   constructor(props){
     super(props);
     this.state={
       nasaList: [],
-      isLoading : false
+      isLoading : true
 
-    }
+    };
   }
   componentDidMount(){
-    var requestOptions = {
-      method: 'GET',
-      redirect: 'follow'
-    };
     
-    fetch("https://api.nasa.gov/planetary/apod/?count=20&api_key=AxM4OjN6eHDSGyeYaze1e5PPwu7fzqT692Yme4FN", requestOptions)
+    fetch("https://api.nasa.gov/planetary/apod/?count=20&api_key=AxM4OjN6eHDSGyeYaze1e5PPwu7fzqT692Yme4FN")
       .then(response => response.json())
       .then(result => {
+        console.log(result)
         this.setState({
-          isLoading:true,
-          nasaList:result
+          
+          nasaList:result,
+          isLoading:false
         })
       })
-      .catch(error => console.log('error', error));
+      
 
   }
   render(){
+    
     const {isLoading, nasaList} = this.state;
-    if(isLoading)
+    if(isLoading) return(
+      <div className="row">
+    <Bars stroke='black'/>
+    <h1 className='col'>Loading...Please Wait</h1>
+    </div>
+    );
     return(
-      <Bars />
-    )
-    return(
-      <div>
+      <div className='containter-fluid'>
+      <div className='row'>
+        <div className='col, text-primary'>
         {nasaList.map((nasaL) => (
           <h1>{nasaL.date}</h1>
-        ))}
+        ))}</div>
       </div>
-    )
+      </div>
+    );
   }
 }
 
